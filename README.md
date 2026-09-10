@@ -1,31 +1,27 @@
-# fingrid-databricks-lakehouse
-A data engineering portfolio project that builds a lakehouse pipeline
-for Finnish electricity consumption data using Databricks, Apache Spark,
-Delta Lake and Fingrid Open Data.
+# Fingrid Databricks Lakehouse
+
+An end-to-end lakehouse data engineering project using Finnish electricity
+consumption data from Fingrid Open Data.
+
+The project demonstrates REST API ingestion, Apache Spark processing,
+Delta Lake storage, medallion architecture, data quality checks, and
+SQL analytics in Databricks.
 
 ## Architecture
 
 Fingrid REST API
 → JSON
-→ PySpark
-→ Bronze Delta
-→ Silver Delta
+→ PySpark DataFrame
+→ Bronze Delta Table
+→ Silver Delta Table
 → SQL Analytics
-
-## Current Features
-
-- Fingrid REST API ingestion
-- JSON processing with Python
-- Apache Spark DataFrames
-- Bronze Delta Lake layer
-- Silver transformation using PySpark
-- Basic data quality checks
-- SQL analytics
 
 ## Data Source
 
-Electricity consumption data is retrieved from Fingrid Open Data,
-dataset 124.
+The project uses Fingrid Open Data:
+
+- Dataset 124: Electricity consumption in Finland
+- Source: Fingrid Open Data REST API
 
 ## Tech Stack
 
@@ -33,19 +29,62 @@ dataset 124.
 - Apache Spark
 - PySpark
 - Delta Lake
-- SQL
 - Python
+- SQL
 - Fingrid Open Data API
 
-## Roadmap
+## Pipeline
 
-- [x] Bronze ingestion
-- [x] Silver transformation
-- [x] Basic data quality
-- [x] SQL analysis
-- [ ] Gold analytical models
-- [ ] dbt transformations
-- [ ] Databricks Workflow
-- [ ] Databricks SQL dashboard
-- [ ] Weather data integration
-- [ ] CI/CD
+### 1. Ingestion
+
+Electricity consumption data is retrieved from the Fingrid REST API
+using Python.
+
+The JSON response is converted into a Spark DataFrame.
+
+### 2. Bronze Layer
+
+Raw Fingrid data is stored as a Delta table.
+
+Additional ingestion metadata is added:
+
+- ingestion timestamp
+- Fingrid dataset ID
+
+### 3. Silver Layer
+
+The Bronze data is transformed using PySpark.
+
+Transformations include:
+
+- timestamp conversion
+- numeric type conversion
+- date and time feature extraction
+- null filtering
+- invalid consumption filtering
+- duplicate removal
+
+The cleaned data is persisted as a Silver Delta table.
+
+### 4. SQL Analytics
+
+The Silver table can be queried using Databricks SQL.
+
+Current analysis includes:
+
+- minimum electricity consumption
+- average electricity consumption
+- maximum electricity consumption
+- average consumption by hour
+
+## Repository Structure
+
+```text
+fingrid-databricks-lakehouse/
+├── README.md
+├── .gitignore
+├── requirements.txt
+├── notebooks/
+│   └── 01_fingrid_bronze_silver.py
+└── sql/
+    └── silver_analysis.sql
